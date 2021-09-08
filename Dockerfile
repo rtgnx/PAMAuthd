@@ -11,10 +11,12 @@ RUN adduser -G testuser -D testuser
 RUN passwd -d testuser
 RUN go test
 
+RUN go build -o /usr/bin/pamauthd
+
 FROM alpine:3.13
 
-COPY --from=builder /usr/bin/pamauthd /usr/bin/pamauthd
+RUN apk add --no-cache ca-certificates
 
-RUN go build -o /usr/bin/pamauthd 
+COPY --from=builder /usr/bin/pamauthd /usr/bin/pamauthd
 
 CMD ["/usr/bin/pamauthd", "serve"]
