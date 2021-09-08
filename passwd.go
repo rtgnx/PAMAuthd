@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -68,7 +69,8 @@ func (p *Passwd) ReadFrom(r io.Reader) error {
 	for _, entry := range strings.Split(string(buf), "\n") {
 		v := new(PasswdEntry)
 		if err := v.Decode([]byte(entry)); err != nil {
-			return err
+			log.Println(err.Error())
+			continue
 		}
 
 		*p = append(*p, *v)
