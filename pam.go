@@ -31,9 +31,9 @@ func PAMAuth(username, password string) bool {
 	}
 	err = t.Authenticate(0)
 	if err != nil {
-		log.Fatalf("authenticate: %s", err.Error())
+		log.Printf("authenticate: %s", err.Error())
 		return false
 	}
-	log.Println("authentication succeeded")
+	log.Printf("authentication for {%s} succeeded\n", username)
 	return true
 }

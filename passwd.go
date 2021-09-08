@@ -26,7 +26,7 @@ func (p *PasswdEntry) Decode(b []byte) error {
 	items := strings.Split(string(b), ":")
 
 	if len(items) < 7 {
-		return fmt.Errorf("invalid passwd entry string, expected 7 values colon delimited")
+		return fmt.Errorf("invalid passwd entry string, expected 7 values colon delimited, got %d", len(items))
 	}
 
 	p.Name, p.Password, p.Fullname, p.Home, p.Shell = items[0], items[1], items[4], items[5], items[6]
