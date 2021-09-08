@@ -15,7 +15,7 @@ RUN go build -o /usr/bin/pamauthd
 
 FROM alpine:3.13
 
-RUN apk add --no-cache ca-certificates
+RUN apk add --no-cache ca-certificates linux-pam
 
 COPY --from=builder /usr/bin/pamauthd /usr/bin/pamauthd
 
