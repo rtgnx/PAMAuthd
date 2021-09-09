@@ -53,6 +53,7 @@ func ParsePasswd(r io.Reader) map[string]PasswdLine {
 
 	for {
 		line, err := rd.ReadBytes('\n')
+		line = []byte(strings.TrimRight(string(line), "\n"))
 		if err != nil {
 			break
 		}
