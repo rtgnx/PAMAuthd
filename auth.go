@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 	"strings"
 
@@ -37,6 +38,7 @@ func BasicAuthValidator(minUID, minGID int, excludeUsernames []string) middlewar
 		fd, err := os.Open("/etc/passwd")
 
 		if err != nil {
+			log.Printf("Unable to open passwd file: %s", err.Error())
 			return false, err
 		}
 
@@ -49,6 +51,8 @@ func BasicAuthValidator(minUID, minGID int, excludeUsernames []string) middlewar
 			c.Set("user", user)
 			return PAMAuth(username, password), nil
 		}
+
+		log.Printf("User {%s} not found", username)
 
 		return false, nil
 
