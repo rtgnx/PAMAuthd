@@ -44,10 +44,9 @@ func BasicAuthValidator(minUID, minGID int, excludeUsernames []string) middlewar
 
 		defer fd.Close()
 		passwd := ParsePasswd(fd)
-
 		user, ok := passwd[username]
 
-		if ok && user.UID > int64(minUID) && user.GID >= int64(minGID) {
+		if ok && user.UID >= int64(minUID) && user.GID >= int64(minGID) {
 			c.Set("user", user)
 			return PAMAuth(username, password), nil
 		}

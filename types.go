@@ -51,8 +51,14 @@ func ParsePasswd(r io.Reader) map[string]PasswdLine {
 	rd := bufio.NewReader(r)
 	passwd := make(map[string]PasswdLine)
 
-	for line, err := rd.ReadBytes(byte(0x0A)); err != nil; {
+	for {
+		line, err := rd.ReadBytes('\n')
+		if err != nil {
+			break
+		}
+
 		p := PasswdLine{}
+
 		if err := p.UnmarshalText(line); err != nil {
 			log.Println(err.Error())
 			return passwd
