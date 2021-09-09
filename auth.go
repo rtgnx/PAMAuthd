@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"strings"
 
 	"github.com/labstack/echo"
@@ -33,19 +34,18 @@ func BasicAuthValidator(minUID, minGID int, excludeUsernames []string) middlewar
 			}
 		}
 
-		passwd, err := FetchPasswdFile()
+		fd, err := os.Open("/etc/passwd")
 
 		if err != nil {
 			return false, err
 		}
 
-		user, ok := passwd.FindByName(username)
+		defer fd.Close()
+		passwd := ParsePasswd(fd)
 
-		if !ok {
-			return false, nil
-		}
+		user, ok := passwd[username]
 
-		if user.UID > uint(minUID) && user.GID >= uint(minGID) {
+		if ok && user.UID > int64(minUID) && user.GID >= int64(minGID) {
 			c.Set("user", user)
 			return PAMAuth(username, password), nil
 		}

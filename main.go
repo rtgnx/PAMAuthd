@@ -28,7 +28,7 @@ func main() {
 }
 
 func Any(ctx echo.Context) error {
-	if user, ok := ctx.Get("user").(PasswdEntry); ok {
+	if user, ok := ctx.Get("user").(PasswdLine); ok {
 		AttachProxyAuthHeaders(ctx, user)
 		return ctx.JSON(http.StatusOK, user)
 	}
@@ -36,7 +36,7 @@ func Any(ctx echo.Context) error {
 	return ctx.NoContent(http.StatusOK)
 }
 
-func AttachProxyAuthHeaders(ctx echo.Context, user PasswdEntry) {
+func AttachProxyAuthHeaders(ctx echo.Context, user PasswdLine) {
 	ctx.Response().Header().Set("X-Forwarded-User", user.Name)
 	ctx.Response().Header().Add("X-Forwarded-FullName", user.Fullname)
 	ctx.Response().Header().Add("X-Forwarded-Uid", fmt.Sprintf("%d", user.UID))

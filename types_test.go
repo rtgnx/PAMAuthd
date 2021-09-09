@@ -6,8 +6,8 @@ func TestPasswdEntry_Decode(t *testing.T) {
 	type fields struct {
 		Name     string
 		Password string
-		UID      uint
-		GID      uint
+		UID      int64
+		GID      int64
 		Fullname string
 		Home     string
 		Shell    string
@@ -29,7 +29,7 @@ func TestPasswdEntry_Decode(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := &PasswdEntry{
+			p := &PasswdLine{
 				Name:     tt.fields.Name,
 				Password: tt.fields.Password,
 				UID:      tt.fields.UID,
@@ -38,8 +38,8 @@ func TestPasswdEntry_Decode(t *testing.T) {
 				Home:     tt.fields.Home,
 				Shell:    tt.fields.Shell,
 			}
-			if err := p.Decode(tt.args.b); (err != nil) != tt.wantErr {
-				t.Errorf("PasswdEntry.Decode() error = %v, wantErr %v", err, tt.wantErr)
+			if err := p.UnmarshalText(tt.args.b); (err != nil) != tt.wantErr {
+				t.Errorf("PasswdLine.UnmarshalText() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
