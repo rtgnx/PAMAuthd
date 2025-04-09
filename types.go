@@ -10,13 +10,14 @@ import (
 )
 
 type PasswdLine struct {
-	Name     string `json:"name"`
-	Password string `json:"password"`
-	UID      int64  `json:"uid"`
-	GID      int64  `json:"gid"`
-	Fullname string `json:"fullname"`
-	Home     string `json:"home"`
-	Shell    string `json:"shell"`
+	Name     string   `json:"name"`
+	Password string   `json:"password"`
+	UID      int64    `json:"uid"`
+	GID      int64    `json:"gid"`
+	Fullname string   `json:"fullname"`
+	Home     string   `json:"home"`
+	Shell    string   `json:"shell"`
+	Groups   []string `json:"groups"`
 }
 
 func (p PasswdLine) Marshal() ([]byte, error) {
@@ -64,7 +65,6 @@ func ParsePasswd(r io.Reader) map[string]PasswdLine {
 			log.Println(err.Error())
 			return passwd
 		}
-
 		passwd[p.Name] = p
 	}
 

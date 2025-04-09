@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"os/user"
 	"strings"
 
 	"github.com/labstack/echo"
@@ -45,6 +46,7 @@ func BasicAuthValidator(minUID, minGID int, excludeUsernames []string) middlewar
 		defer fd.Close()
 		passwd := ParsePasswd(fd)
 		user, ok := passwd[username]
+		user.Groups = lookupGroups(user.Name)
 
 		if ok && user.UID >= int64(minUID) && user.GID >= int64(minGID) {
 			c.Set("user", user)
@@ -64,4 +66,18 @@ func AuthMiddlewareWithConfig(config PAMAuthConfig) echo.MiddlewareFunc {
 		Validator: BasicAuthValidator(config.MinUID, config.MinGID, config.ExcludeUsernames),
 		Realm:     middleware.DefaultBasicAuthConfig.Realm,
 	})
+}
+
+func lookupGroups(name string) (groups []string) {
+	groups = []string{}
+	if u, err := user.Lookup(name); err == nil {
+		if ids, err := u.GroupIds(); err == nil {
+			for _, id := range ids {
+				if g, err := user.LookupGroupId(id); err == nil {
+					groups = append(groups, g.Name)
+				}
+			}
+		}
+	}
+	return groups
 }
